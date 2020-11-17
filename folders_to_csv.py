@@ -14,27 +14,49 @@ folder
 ...
 """
 import csv
+from typing import List
+import os
+
+SUCCESS = 0
+
+def parse_file(file_path: str) -> List[str]:
+    """
+    Parse a mail file into a List[str]
+    avec envoyeur, destinataire, sujet, Date, folderName 
+    """
+    raise NotImplementedError
 
 
-def convert_to_csv(folder_path: str):
+def convert_to_csv(folder_path: str) -> List[List[str]]:
     """
     Take a path to a folder, and return an array
     """
-    raise NotImplementedError
+    
+    # Check that the folder exists
+    if not os.path.isdir(folder_path):
+        raise FileNotFoundError("Data folder not found in: " + folder_path)
+    
+    print(os.listdir(folder_path))
+    
+    return [["a", "b"], ["az", "az"]]
 
 
-def write_to_csv(folder_path: str, array):
+def write_to_csv(output_path: str, array: List[List[str]]) -> int:
     """
     Take an array, write a csv to the output path
     """
-    raise NotImplementedError
+    with open(output_path, mode="w+", newline="") as file:
+        result_writer = csv.writer(file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        [result_writer.writerow(row) for row in array]
+    
+    return SUCCESS
 
 
 if __name__ == "__main__":
     print("Running as main")
-    MAILS_FOLDER_PATH = "../maildir"
-    OUTPUT_CSV_PATH = "../mails.csv"
-    
+    MAILS_FOLDER_PATH = "maildir"
+    OUTPUT_CSV_PATH = "mails.csv"
     ARRAY = convert_to_csv(MAILS_FOLDER_PATH)
-    write_to_csv(OUTPUT_CSV_PATH, ARRAY)
-
+    
+    if write_to_csv(OUTPUT_CSV_PATH, ARRAY) == SUCCESS:
+        print("Write success")
